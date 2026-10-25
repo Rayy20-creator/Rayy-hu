@@ -1,6 +1,6 @@
 --========================================
 -- RAYY HUB | MIKU BLACK EDITION
--- Mobile GUI
+-- GUI FIXED VERSION
 --========================================
 
 local Players = game:GetService("Players")
@@ -15,13 +15,11 @@ local BLACK = Color3.fromRGB(10, 10, 15)
 local PANEL = Color3.fromRGB(20, 22, 30)
 local WHITE = Color3.fromRGB(240, 245, 255)
 
--- Hapus GUI lama
 local old = playerGui:FindFirstChild("RayyHub")
 if old then
     old:Destroy()
 end
 
--- ScreenGui
 local gui = Instance.new("ScreenGui")
 gui.Name = "RayyHub"
 gui.ResetOnSpawn = false
@@ -29,24 +27,34 @@ gui.IgnoreGuiInset = true
 gui.DisplayOrder = 100
 gui.Parent = playerGui
 
--- Fungsi sudut
 local function corner(obj, radius)
     local c = Instance.new("UICorner")
     c.CornerRadius = UDim.new(0, radius)
     c.Parent = obj
 end
 
--- Fungsi garis cyan
 local function stroke(obj)
     local s = Instance.new("UIStroke")
     s.Color = CYAN
     s.Thickness = 1.3
-    s.Transparency = 0.15
     s.Parent = obj
-    return s
 end
 
--- Jendela utama
+local function makeButton(parent, text, size, position)
+    local b = Instance.new("TextButton")
+    b.Size = size
+    b.Position = position
+    b.BackgroundColor3 = PANEL
+    b.Text = text
+    b.TextColor3 = CYAN
+    b.TextSize = 15
+    b.Font = Enum.Font.GothamBold
+    b.Parent = parent
+    corner(b, 7)
+    return b
+end
+
+-- MAIN WINDOW
 local main = Instance.new("Frame")
 main.Name = "Main"
 main.Size = UDim2.new(0, 310, 0, 365)
@@ -59,7 +67,7 @@ main.Parent = gui
 corner(main, 12)
 stroke(main)
 
--- Header
+-- HEADER
 local header = Instance.new("Frame")
 header.Size = UDim2.new(1, 0, 0, 42)
 header.BackgroundColor3 = PANEL
@@ -68,8 +76,8 @@ header.Active = true
 header.Parent = main
 
 local title = Instance.new("TextLabel")
-title.Size = UDim2.new(1, -100, 1, 0)
-title.Position = UDim2.new(0, 12, 0, 0)
+title.Size = UDim2.new(1, -105, 1, 0)
+title.Position = UDim2.new(0, 10, 0, 0)
 title.BackgroundTransparency = 1
 title.Text = "RAYY HUB"
 title.TextColor3 = CYAN
@@ -78,36 +86,19 @@ title.Font = Enum.Font.GothamBold
 title.TextXAlignment = Enum.TextXAlignment.Left
 title.Parent = header
 
-local function makeButton(parent, text, size, position)
-    local b = Instance.new("TextButton")
-    b.Size = size
-    b.Position = position
-    b.BackgroundColor3 = PANEL
-    b.Text = text
-    b.TextColor3 = CYAN
-    b.TextSize = 16
-    b.Font = Enum.Font.GothamBold
-    b.AutoButtonColor = true
-    b.Parent = parent
-    corner(b, 7)
-    return b
-end
-
--- Minimize
 local minimize = makeButton(
     header, "—",
     UDim2.new(0, 32, 0, 30),
     UDim2.new(1, -72, 0, 6)
 )
 
--- Close: sembunyikan GUI, bukan hapus
 local close = makeButton(
     header, "×",
     UDim2.new(0, 32, 0, 30),
     UDim2.new(1, -36, 0, 6)
 )
 
--- Wallpaper dekoratif
+-- ANIMATED NEON WALLPAPER
 local wallpaper = Instance.new("Frame")
 wallpaper.Size = UDim2.new(1, -20, 0, 110)
 wallpaper.Position = UDim2.new(0, 10, 0, 52)
@@ -118,17 +109,16 @@ wallpaper.Parent = main
 corner(wallpaper, 9)
 stroke(wallpaper)
 
-local bgGradient = Instance.new("UIGradient")
-bgGradient.Color = ColorSequence.new({
-    ColorSequenceKeypoint.new(0, Color3.fromRGB(0, 15, 25)),
-    ColorSequenceKeypoint.new(0.5, Color3.fromRGB(0, 95, 115)),
+local gradient = Instance.new("UIGradient")
+gradient.Color = ColorSequence.new({
+    ColorSequenceKeypoint.new(0, Color3.fromRGB(0, 10, 20)),
+    ColorSequenceKeypoint.new(0.5, Color3.fromRGB(0, 110, 130)),
     ColorSequenceKeypoint.new(1, Color3.fromRGB(5, 10, 20))
 })
-bgGradient.Parent = wallpaper
+gradient.Parent = wallpaper
 
--- Animasi warna background
 TweenService:Create(
-    bgGradient,
+    gradient,
     TweenInfo.new(4, Enum.EasingStyle.Sine,
         Enum.EasingDirection.InOut, -1, true),
     {Rotation = 180}
@@ -138,9 +128,9 @@ local animeTitle = Instance.new("TextLabel")
 animeTitle.Size = UDim2.new(1, 0, 0, 40)
 animeTitle.Position = UDim2.new(0, 0, 0, 22)
 animeTitle.BackgroundTransparency = 1
-animeTitle.Text = "初音ミク  •  MIKU"
+animeTitle.Text = "MIKU BLACK EDITION"
 animeTitle.TextColor3 = CYAN
-animeTitle.TextSize = 23
+animeTitle.TextSize = 20
 animeTitle.Font = Enum.Font.GothamBold
 animeTitle.Parent = wallpaper
 
@@ -148,49 +138,12 @@ local subtitle = Instance.new("TextLabel")
 subtitle.Size = UDim2.new(1, 0, 0, 25)
 subtitle.Position = UDim2.new(0, 0, 0, 62)
 subtitle.BackgroundTransparency = 1
-subtitle.Text = "BLACK NEON EDITION"
+subtitle.Text = "RAYY HUB"
 subtitle.TextColor3 = WHITE
 subtitle.TextSize = 12
-subtitle.Font = Enum.Font.Gotham
 subtitle.Parent = wallpaper
 
--- Partikel bergerak
-for i = 1, 12 do
-    local dot = Instance.new("Frame")
-    dot.Size = UDim2.new(0, 3, 0, 3)
-    dot.Position = UDim2.new((i - 1) / 12, 0, 1, 0)
-    dot.BackgroundColor3 = CYAN
-    dot.BorderSizePixel = 0
-    dot.Parent = wallpaper
-    corner(dot, 5)
-
-    task.spawn(function()
-        while dot.Parent do
-            dot.Position = UDim2.new(
-                math.random(5, 95) / 100, 0, 1.1, 0
-            )
-            dot.BackgroundTransparency = 0
-
-            local tween = TweenService:Create(
-                dot,
-                TweenInfo.new(
-                    math.random(2, 4),
-                    Enum.EasingStyle.Linear
-                ),
-                {
-                    Position = UDim2.new(
-                        dot.Position.X.Scale, 0, -0.2, 0
-                    ),
-                    BackgroundTransparency = 1
-                }
-            )
-            tween:Play()
-            tween.Completed:Wait()
-        end
-    end)
-end
-
--- Pengaturan pemain
+-- MAX PLAYERS
 local playerLabel = Instance.new("TextLabel")
 playerLabel.Size = UDim2.new(1, -20, 0, 25)
 playerLabel.Position = UDim2.new(0, 10, 0, 172)
@@ -207,9 +160,7 @@ playerInput.Size = UDim2.new(1, -20, 0, 35)
 playerInput.Position = UDim2.new(0, 10, 0, 200)
 playerInput.BackgroundColor3 = PANEL
 playerInput.Text = "3"
-playerInput.PlaceholderText = "Masukkan jumlah pemain"
 playerInput.TextColor3 = CYAN
-playerInput.PlaceholderColor3 = WHITE
 playerInput.TextSize = 16
 playerInput.Font = Enum.Font.GothamBold
 playerInput.ClearTextOnFocus = false
@@ -225,84 +176,86 @@ playerInput.FocusLost:Connect(function()
 
     if number and number >= 1 and number % 1 == 0 then
         maxPlayers = math.clamp(number, 1, 100)
-        playerInput.Text = tostring(maxPlayers)
-    else
-        playerInput.Text = tostring(maxPlayers)
     end
+
+    playerInput.Text = tostring(maxPlayers)
 end)
 
--- Status
-local status = Instance.new("TextLabel")
-status.Size = UDim2.new(1, -20, 0, 25)
-status.Position = UDim2.new(0, 10, 0, 240)
-status.BackgroundTransparency = 1
-status.Text = "Status: Ready"
-status.TextColor3 = CYAN
-status.TextSize = 12
-status.Font = Enum.Font.Gotham
-status.Parent = main
+-- STATUS IMAGE PLACEHOLDER
+local statusImage = Instance.new("ImageLabel")
+statusImage.Name = "MikuStatusImage"
+statusImage.Size = UDim2.new(1, -20, 0, 25)
+statusImage.Position = UDim2.new(0, 10, 0, 240)
+statusImage.BackgroundColor3 = PANEL
+statusImage.BorderSizePixel = 0
+statusImage.Image = ""
+statusImage.ScaleType = Enum.ScaleType.Crop
+statusImage.Parent = main
 
--- Tombol pencarian
+corner(statusImage, 6)
+stroke(statusImage)
+
+-- FIND SERVER BUTTON
 local findButton = makeButton(
     main, "FIND QUIET SERVER",
     UDim2.new(1, -20, 0, 35),
     UDim2.new(0, 10, 0, 270)
 )
 
-findButton.MouseButton1Click:Connect(function()
-    status.Text = "Status: Server finder belum terhubung"
+findButton.Activated:Connect(function()
+    findButton.Text = "SEARCH NOT CONNECTED"
+    print("Rayy Hub: Max players =", maxPlayers)
 end)
 
--- Tombol Auto Hop
+-- AUTO HOP BUTTON
 local autoHop = false
+
 local hopButton = makeButton(
     main, "AUTO HOP: OFF",
     UDim2.new(1, -20, 0, 35),
     UDim2.new(0, 10, 0, 312)
 )
 
-hopButton.MouseButton1Click:Connect(function()
+hopButton.Activated:Connect(function()
     autoHop = not autoHop
 
-    if autoHop then
-        hopButton.Text = "AUTO HOP: ON"
-        status.Text = "Status: Auto Hop diaktifkan"
-    else
-        hopButton.Text = "AUTO HOP: OFF"
-        status.Text = "Status: Auto Hop dimatikan"
-    end
+    hopButton.Text = autoHop
+        and "AUTO HOP: ON"
+        or "AUTO HOP: OFF"
+
+    print("Rayy Hub Auto Hop:", autoHop)
 end)
 
--- Tombol buka kembali
+-- MINIMIZE / REOPEN
 local reopen = makeButton(
     gui, "R",
     UDim2.new(0, 48, 0, 48),
     UDim2.new(0, 15, 0.5, -24)
 )
+
 reopen.Visible = false
 corner(reopen, 24)
 stroke(reopen)
 
-minimize.MouseButton1Click:Connect(function()
+minimize.Activated:Connect(function()
     main.Visible = false
     reopen.Visible = true
 end)
 
-reopen.MouseButton1Click:Connect(function()
+reopen.Activated:Connect(function()
     main.Visible = true
     reopen.Visible = false
 end)
 
-close.MouseButton1Click:Connect(function()
+close.Activated:Connect(function()
     main.Visible = false
     reopen.Visible = false
 end)
 
--- Drag dengan mouse dan sentuhan HP
+-- DRAG WITH TOUCH OR MOUSE
 local dragging = false
 local dragStart
 local startPosition
-local dragInput
 
 header.InputBegan:Connect(function(input)
     if input.UserInputType == Enum.UserInputType.MouseButton1
@@ -311,25 +264,12 @@ header.InputBegan:Connect(function(input)
         dragging = true
         dragStart = input.Position
         startPosition = main.Position
-
-        input.Changed:Connect(function()
-            if input.UserInputState == Enum.UserInputState.End then
-                dragging = false
-            end
-        end)
-    end
-end)
-
-header.InputChanged:Connect(function(input)
-    if input.UserInputType == Enum.UserInputType.MouseMovement
-        or input.UserInputType == Enum.UserInputType.Touch then
-        dragInput = input
     end
 end)
 
 UserInputService.InputChanged:Connect(function(input)
     if dragging and (
-        input == dragInput
+        input.UserInputType == Enum.UserInputType.MouseMovement
         or input.UserInputType == Enum.UserInputType.Touch
     ) then
         local delta = input.Position - dragStart
@@ -343,4 +283,11 @@ UserInputService.InputChanged:Connect(function(input)
     end
 end)
 
-print("Rayy Hub loaded")
+UserInputService.InputEnded:Connect(function(input)
+    if input.UserInputType == Enum.UserInputType.MouseButton1
+        or input.UserInputType == Enum.UserInputType.Touch then
+        dragging = false
+    end
+end)
+
+print("Rayy Hub GUI loaded")

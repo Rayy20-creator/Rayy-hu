@@ -1,0 +1,370 @@
+--========================================
+-- RAYY HUB | THE HOLLOW EVENT
+-- BLACK & RED UI
+--========================================
+
+local Players = game:GetService("Players")
+local UserInputService = game:GetService("UserInputService")
+local player = Players.LocalPlayer
+local playerGui = player:WaitForChild("PlayerGui")
+
+local old = playerGui:FindFirstChild("RAYY_HUB")
+if old then old:Destroy() end
+
+local RED = Color3.fromRGB(200, 25, 40)
+local DARK = Color3.fromRGB(15, 15, 18)
+local PANEL = Color3.fromRGB(28, 28, 34)
+local WHITE = Color3.fromRGB(245, 245, 245)
+
+local gui = Instance.new("ScreenGui")
+gui.Name = "RAYY_HUB"
+gui.ResetOnSpawn = false
+gui.Parent = playerGui
+
+local function create(class, props, parent)
+    local obj = Instance.new(class)
+    for k, v in pairs(props) do
+        obj[k] = v
+    end
+    obj.Parent = parent
+    return obj
+end
+
+local function round(obj, radius)
+    create("UICorner", {
+        CornerRadius = UDim.new(0, radius)
+    }, obj)
+end
+
+local window = create("Frame", {
+    Size = UDim2.fromOffset(560, 390),
+    Position = UDim2.new(0.5, -280, 0.5, -195),
+    BackgroundColor3 = DARK,
+    BorderSizePixel = 0
+}, gui)
+round(window, 10)
+
+local top = create("Frame", {
+    Size = UDim2.new(1, 0, 0, 45),
+    BackgroundColor3 = PANEL,
+    BorderSizePixel = 0
+}, window)
+round(top, 10)
+
+create("TextLabel", {
+    Size = UDim2.new(0.7, 0, 1, 0),
+    Position = UDim2.fromOffset(12, 0),
+    BackgroundTransparency = 1,
+    Text = "RAYY HUB | THE HOLLOW",
+    TextColor3 = RED,
+    TextSize = 16,
+    Font = Enum.Font.GothamBold,
+    TextXAlignment = Enum.TextXAlignment.Left
+}, top)
+
+local close = create("TextButton", {
+    Size = UDim2.fromOffset(32, 28),
+    Position = UDim2.new(1, -38, 0, 8),
+    BackgroundColor3 = RED,
+    Text = "X",
+    TextColor3 = WHITE,
+    Font = Enum.Font.GothamBold,
+    TextSize = 14
+}, top)
+round(close, 6)
+
+local minimize = create("TextButton", {
+    Size = UDim2.fromOffset(32, 28),
+    Position = UDim2.new(1, -76, 0, 8),
+    BackgroundColor3 = DARK,
+    Text = "-",
+    TextColor3 = WHITE,
+    Font = Enum.Font.GothamBold,
+    TextSize = 18
+}, top)
+round(minimize, 6)
+
+local sidebar = create("Frame", {
+    Position = UDim2.fromOffset(10, 55),
+    Size = UDim2.new(0, 130, 1, -65),
+    BackgroundColor3 = PANEL,
+    BorderSizePixel = 0
+}, window)
+round(sidebar, 8)
+
+local content = create("Frame", {
+    Position = UDim2.fromOffset(150, 55),
+    Size = UDim2.new(1, -160, 1, -65),
+    BackgroundColor3 = PANEL,
+    BorderSizePixel = 0
+}, window)
+round(content, 8)
+
+local title = create("TextLabel", {
+    Position = UDim2.fromOffset(12, 8),
+    Size = UDim2.new(1, -24, 0, 28),
+    BackgroundTransparency = 1,
+    Text = "HOME",
+    TextColor3 = RED,
+    TextSize = 17,
+    Font = Enum.Font.GothamBold,
+    TextXAlignment = Enum.TextXAlignment.Left
+}, content)
+
+local page = create("ScrollingFrame", {
+    Position = UDim2.fromOffset(10, 42),
+    Size = UDim2.new(1, -20, 1, -52),
+    BackgroundTransparency = 1,
+    BorderSizePixel = 0,
+    ScrollBarThickness = 4,
+    AutomaticCanvasSize = Enum.AutomaticSize.Y,
+    CanvasSize = UDim2.new()
+}, content)
+
+create("UIListLayout", {
+    Padding = UDim.new(0, 7),
+    SortOrder = Enum.SortOrder.LayoutOrder
+}, page)
+
+local function clearPage()
+    for _, v in ipairs(page:GetChildren()) do
+        if v:IsA("GuiObject") and not v:IsA("UIListLayout") then
+            v:Destroy()
+        end
+    end
+end
+
+local function heading(text)
+    local label = create("TextLabel", {
+        Size = UDim2.new(1, -4, 0, 28),
+        BackgroundColor3 = RED,
+        Text = "  " .. text,
+        TextColor3 = WHITE,
+        TextSize = 12,
+        Font = Enum.Font.GothamBold,
+        TextXAlignment = Enum.TextXAlignment.Left
+    }, page)
+    round(label, 6)
+end
+
+local function info(text)
+    local label = create("TextLabel", {
+        Size = UDim2.new(1, -4, 0, 45),
+        BackgroundColor3 = DARK,
+        Text = text,
+        TextColor3 = WHITE,
+        TextSize = 12,
+        Font = Enum.Font.Gotham,
+        TextWrapped = true
+    }, page)
+    round(label, 6)
+end
+
+local function toggle(name)
+    local row = create("Frame", {
+        Size = UDim2.new(1, -4, 0, 38),
+        BackgroundColor3 = DARK
+    }, page)
+    round(row, 6)
+
+    create("TextLabel", {
+        Position = UDim2.fromOffset(9, 0),
+        Size = UDim2.new(1, -75, 1, 0),
+        BackgroundTransparency = 1,
+        Text = name,
+        TextColor3 = WHITE,
+        TextSize = 11,
+        Font = Enum.Font.Gotham,
+        TextXAlignment = Enum.TextXAlignment.Left
+    }, row)
+
+    local enabled = false
+    local btn = create("TextButton", {
+        Position = UDim2.new(1, -59, 0, 6),
+        Size = UDim2.fromOffset(50, 26),
+        BackgroundColor3 = RED,
+        Text = "OFF",
+        TextColor3 = WHITE,
+        TextSize = 10,
+        Font = Enum.Font.GothamBold
+    }, row)
+    round(btn, 6)
+
+    btn.Activated:Connect(function()
+        enabled = not enabled
+        btn.Text = enabled and "ON" or "OFF"
+        btn.BackgroundColor3 = enabled
+            and Color3.fromRGB(35, 150, 75)
+            or RED
+    end)
+end
+
+local pages = {
+    Home = function()
+        heading("WELCOME")
+        info("RAYY HUB - THE HOLLOW EVENT")
+        info("Game: Flee the Facility")
+        info("Theme: Black & Red")
+        info("Gunakan menu di kiri untuk navigasi.")
+    end,
+
+    Main = function()
+        heading("MAIN FEATURES")
+        toggle("Auto Collect Candy")
+        toggle("Auto Hack Computer")
+        toggle("Auto Find Exit")
+        toggle("Auto Interact")
+        toggle("Auto Complete Objective")
+        toggle("Auto Escape Helper")
+        info("Toggle ini hanya mengubah status UI.")
+    end,
+
+    ESP = function()
+        heading("ESP SETTINGS")
+        toggle("Computer ESP")
+        toggle("Player ESP")
+        toggle("Beast ESP")
+        toggle("Exit ESP")
+        toggle("Candy ESP")
+        toggle("Objective ESP")
+        toggle("Distance Display")
+        toggle("Name Display")
+    end,
+
+    Player = function()
+        heading("PLAYER SETTINGS")
+        toggle("Speed Boost")
+        toggle("Jump Boost")
+        toggle("Infinite Jump")
+        toggle("Fly")
+        toggle("Noclip")
+        info("Toggle di atas belum mengubah mekanisme karakter.")
+    end,
+
+    Survival = function()
+        heading("SURVIVAL")
+        toggle("Beast Warning")
+        toggle("Danger Indicator")
+        toggle("Escape Route Indicator")
+        toggle("Nearby Player Alert")
+    end,
+
+    Event = function()
+        heading("THE HOLLOW EVENT")
+        toggle("Candy Goal Complete")
+        toggle("Quest 1 Complete")
+        toggle("Quest 2 Complete")
+        toggle("Quest 3 Complete")
+        heading("REWARDS")
+        toggle("Reward 1 Claimed")
+        toggle("Reward 2 Claimed")
+        toggle("Reward 3 Claimed")
+    end,
+
+    Server = function()
+        heading("SERVER INFO")
+        info("Player: " .. player.Name)
+        info("User ID: " .. tostring(player.UserId))
+        info("Players: " .. tostring(#Players:GetPlayers()))
+    end,
+
+    Settings = function()
+        heading("SETTINGS")
+        toggle("Show Sidebar")
+        toggle("Save Settings")
+        info("Tema: Black & Red")
+        info("RAYY HUB")
+    end
+}
+
+local nav = {
+    "Home", "Main", "ESP", "Player",
+    "Survival", "Event", "Server", "Settings"
+}
+
+local function show(name)
+    title.Text = string.upper(name)
+    clearPage()
+    pages[name]()
+end
+
+for i, name in ipairs(nav) do
+    local btn = create("TextButton", {
+        Size = UDim2.new(1, -10, 0, 33),
+        BackgroundColor3 = DARK,
+        Text = name,
+        TextColor3 = WHITE,
+        TextSize = 11,
+        Font = Enum.Font.GothamBold,
+        LayoutOrder = i
+    }, sidebar)
+    btn.Position = UDim2.fromOffset(5, 5 + (i - 1) * 38)
+    round(btn, 6)
+
+    btn.Activated:Connect(function()
+        show(name)
+    end)
+end
+
+local reopen = create("TextButton", {
+    Size = UDim2.fromOffset(45, 45),
+    Position = UDim2.new(0, 10, 0.5, -22),
+    BackgroundColor3 = RED,
+    Text = "R",
+    TextColor3 = WHITE,
+    TextSize = 20,
+    Font = Enum.Font.GothamBold,
+    Visible = false
+}, gui)
+round(reopen, 22)
+
+minimize.Activated:Connect(function()
+    window.Visible = false
+    reopen.Visible = true
+end)
+
+reopen.Activated:Connect(function()
+    window.Visible = true
+    reopen.Visible = false
+end)
+
+close.Activated:Connect(function()
+    gui:Destroy()
+end)
+
+-- Drag window
+local dragging = false
+local dragStart
+local startPos
+
+top.InputBegan:Connect(function(input)
+    if input.UserInputType == Enum.UserInputType.MouseButton1
+    or input.UserInputType == Enum.UserInputType.Touch then
+        dragging = true
+        dragStart = input.Position
+        startPos = window.Position
+
+        input.Changed:Connect(function()
+            if input.UserInputState == Enum.UserInputState.End then
+                dragging = false
+            end
+        end)
+    end
+end)
+
+UserInputService.InputChanged:Connect(function(input)
+    if dragging and (
+        input.UserInputType == Enum.UserInputType.MouseMovement
+        or input.UserInputType == Enum.UserInputType.Touch
+    ) then
+        local delta = input.Position - dragStart
+        window.Position = UDim2.new(
+            startPos.X.Scale,
+            startPos.X.Offset + delta.X,
+            startPos.Y.Scale,
+            startPos.Y.Offset + delta.Y
+        )
+    end
+end)
+
+show("Home")
